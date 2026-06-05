@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARMORAI — Cyber Defense Intelligence | Founder Nnadi Daniel</title>
+<meta name="description" content="ARMORAI: AI-driven cyber defense platform by Nnadi Daniel. Real-time threat intelligence, Aura AI assistant, enterprise protection.">
+<meta name="author" content="Nnadi Daniel">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+<style>
+  /* ========== YOUR ORIGINAL STYLES (FULLY PRESERVED) ========== */
+  :root {
+    --black: #020406;
+    --deep: #050b10;
+    --surface: #0a1520;
+    --card: #0d1e2e;
+    --border: #0f2d45;
+    --accent: #00d4ff;
+    --accent2: #ff3c3c;
+    --accent3: #00ff88;
+    --text: #c8dce8;
+    --muted: #4a6478;
+    --white: #e8f4ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(0,212,255,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+    pointer-events: none;
+    z-index: 1000;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: linear-gradient(rgba(0,212,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 60px;
+    background: linear-gradient(180deg, rgba(2,4,6,0.98) 0%, transparent 100%);
+    border-bottom: 1px solid rgba(0,212,255,0.06);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 6px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta, .nav-login {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: 1px solid var(--accent);
+    padding: 10px 24px;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    background: transparent;
+    cursor: pointer;
+    display: inline-block;
+  }
+  .nav-cta { color: var(--accent); margin-right: 12px; }
+  .nav-login { color: var(--accent); }
+  .nav-cta:hover, .nav-login:hover {
+    background: var(--accent);
+    color: var(--black);
+  }
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 140px 60px 80px;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .radar {
+    position: absolute;
+    right: -80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 700px;
+    height: 700px;
+  }
+  .radar-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px solid rgba(0,212,255,0.12);
+    animation: pulse-ring 4s ease-in-out infinite;
+  }
+  .radar-ring:nth-child(1) { width: 160px; height: 160px; animation-delay: 0s; }
+  .radar-ring:nth-child(2) { width: 280px; height: 280px; animation-delay: 0.5s; }
+  .radar-ring:nth-child(3) { width: 400px; height: 400px; animation-delay: 1s; }
+  .radar-ring:nth-child(4) { width: 520px; height: 520px; animation-delay: 1.5s; }
+  .radar-ring:nth-child(5) { width: 640px; height: 640px; animation-delay: 2s; }
+  .radar-sweep {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 50%;
+    height: 2px;
+    transform-origin: left center;
+    animation: sweep 4s linear infinite;
+  }
+  .radar-sweep::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,212,255,0.8), transparent);
+  }
+  .radar-crosshair {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .radar-crosshair::before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 640px;
+    background: rgba(0,212,255,0.08);
+    left: 0;
+    top: -320px;
+  }
+  .radar-crosshair::after {
+    content: '';
+    position: absolute;
+    height: 1px;
+    width: 640px;
+    background: rgba(0,212,255,0.08);
+    top: 0;
+    left: -320px;
+  }
+  .blip {
+    position: absolute;
+    width: 5px; height: 5px;
+    background: var(--accent3);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent3);
+    animation: blip-fade 4s ease-in-out infinite;
+  }
+  .blip:nth-child(6)  { top: 31%; left: 58%; animation-delay: 0.8s; }
+  .blip:nth-child(7)  { top: 62%; left: 44%; animation-delay: 1.6s; }
+  .blip:nth-child(8)  { top: 44%; left: 70%; animation-delay: 2.4s; }
+  .blip:nth-child(9)  { top: 55%; left: 38%; animation-delay: 0.3s; }
+  .blip:nth-child(10) { top: 38%; left: 52%; animation-delay: 3.1s; background: var(--accent2); box-shadow: 0 0 8px var(--accent2); }
+  @keyframes pulse-ring {
+    0%, 100% { opacity: 0.12; }
+    50% { opacity: 0.35; }
+  }
+  @keyframes sweep {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes blip-fade {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.8); }
+  }
+  .hero-glow {
+    position: absolute;
+    right: 200px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 680px;
+  }
+  .hero-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 9vw, 130px);
+    line-height: 0.9;
+    color: var(--white);
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease 0.15s both;
+  }
+  h1 .line2 {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(0,212,255,0.5);
+    display: block;
+  }
+  h1 .accent-word { color: var(--accent); }
+  .hero-desc {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 480px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    animation: fadeUp 0.8s ease 0.45s both;
+  }
+  .btn-primary {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--accent);
+    padding: 16px 36px;
+    text-decoration: none;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover::after { opacity: 0.15; }
+  .btn-ghost {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--accent); }
+  .btn-ghost svg { transition: transform 0.2s; }
+  .btn-ghost:hover svg { transform: translateX(4px); }
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 72px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.8s ease 0.6s both;
+  }
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--white);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .stat-number span { color: var(--accent); }
+  .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  section { position: relative; z-index: 2; }
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before { content: '//'; opacity: 0.5; }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 5vw, 72px);
+    color: var(--white);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+  .section-title em {
+    font-style: normal;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(0,212,255,0.4);
+  }
+  .section-sub {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 500px;
+  }
+  #services {
+    padding: 120px 60px;
+    background: var(--deep);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .services-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: end;
+    margin-bottom: 80px;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .service-card {
+    background: var(--card);
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: default;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .service-card:hover { background: #101d2e; }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-icon {
+    width: 48px; height: 48px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .service-icon svg { width: 100%; height: 100%; }
+  .service-num {
+    position: absolute;
+    top: 36px; right: 36px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    color: rgba(0,212,255,0.05);
+    letter-spacing: 2px;
+    line-height: 1;
+    transition: color 0.3s;
+  }
+  .service-card:hover .service-num { color: rgba(0,212,255,0.1); }
+  .service-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 14px;
+  }
+  .service-desc {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+  .service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    border: 1px solid rgba(0,212,255,0.2);
+    padding: 4px 10px;
+    text-transform: uppercase;
+  }
+  .ticker-bar {
+    background: rgba(0,212,255,0.03);
+    border-top: 1px solid rgba(0,212,255,0.1);
+    border-bottom: 1px solid rgba(0,212,255,0.1);
+    padding: 14px 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .ticker-inner {
+    display: flex;
+    gap: 80px;
+    white-space: nowrap;
+    animation: ticker 25s linear infinite;
+  }
+  .ticker-item {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .ticker-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent3);
+    box-shadow: 0 0 6px var(--accent3);
+    flex-shrink: 0;
+  }
+  .ticker-dot.red { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  #pricing {
+    padding: 120px 60px;
+  }
+  .pricing-header {
+    text-align: center;
+    margin-bottom: 72px;
+  }
+  .pricing-header .section-label { justify-content: center; }
+  .pricing-header .section-sub { margin: 0 auto; text-align: center; }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .pricing-card {
+    background: var(--card);
+    padding: 48px 40px;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .pricing-card.featured {
+    background: var(--surface);
+    border-top: 2px solid var(--accent);
+  }
+  .pricing-card:not(.featured):hover { background: #101d2e; }
+  .plan-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--accent);
+    padding: 4px 12px;
+    display: inline-block;
+    margin-bottom: 32px;
+  }
+  .plan-badge.dim {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .plan-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 3px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .plan-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    color: var(--white);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .plan-price sup {
+    font-size: 28px;
+    vertical-align: top;
+    margin-top: 12px;
+    display: inline-block;
+    color: var(--accent);
+  }
+  .plan-period {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 36px;
+  }
+  .plan-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 32px;
+  }
+  .plan-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+  .plan-features li {
+    font-size: 14px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .plan-features li::before {
+    content: '▸';
+    color: var(--accent);
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+  .plan-features li.muted {
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+  .plan-features li.muted::before { color: var(--muted); }
+  .btn-plan {
+    display: block;
+    text-align: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    transition: all 0.2s;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+  .btn-plan:hover, .pricing-card.featured .btn-plan {
+    background: var(--accent);
+    color: var(--black);
+  }
+  .pricing-card.featured .btn-plan:hover {
+    background: #00b8d9;
+    border-color: #00b8d9;
+  }
+  #contact {
+    padding: 120px 60px;
+    background: var(--deep);
+    border-top: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  #contact::before {
+    content: 'ARMORAI';
+    position: absolute;
+    bottom: -40px;
+    right: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 220px;
+    color: rgba(0,212,255,0.02);
+    letter-spacing: 10px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: start;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .contact-info p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--muted);
+    margin: 24px 0 48px;
+  }
+  .contact-items {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .contact-item-icon {
+    width: 40px; height: 40px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .contact-item-icon svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; }
+  .contact-item-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+  .contact-item-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .form-group label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: rgba(0,212,255,0.03);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: none;
+    -webkit-appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: rgba(0,212,255,0.4);
+  }
+  .form-group select option {
+    background: var(--card);
+  }
+  .form-group textarea { height: 120px; }
+  .btn-submit {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--accent);
+    border: none;
+    padding: 18px 40px;
+    cursor: pointer;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: all 0.2s;
+    align-self: flex-start;
+  }
+  .btn-submit:hover { background: #00b8d9; }
+  footer {
+    padding: 40px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 2;
+    position: relative;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 6px;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-copy {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .footer-links {
+    display: flex;
+    gap: 32px;
+  }
+  .footer-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+  .status-bar {
+    position: fixed;
+    bottom: 24px;
+    left: 60px;
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent3);
+    box-shadow: 0 0 10px var(--accent3);
+    animation: blink 2s ease-in-out infinite;
+  }
+  .status-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+  .reveal-delay-5 { transition-delay: 0.5s; }
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    #hero { padding: 120px 24px 60px; }
+    .radar { display: none; }
+    .hero-glow { display: none; }
+    .hero-stats { gap: 32px; flex-wrap: wrap; }
+    #services { padding: 80px 24px; }
+    .services-header { grid-template-columns: 1fr; gap: 24px; }
+    .services-grid { grid-template-columns: 1fr; }
+    #pricing { padding: 80px 24px; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    #contact { padding: 80px 24px; }
+    .contact-inner { grid-template-columns: 1fr; gap: 60px; }
+    footer { flex-direction: column; gap: 20px; text-align: center; padding: 32px 24px; }
+    .status-bar { left: 24px; bottom: 16px; }
+  }
+  .whatsapp-float {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: #25D366;
+    color: white;
+    border-radius: 50px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    z-index: 1000;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  .whatsapp-float:hover { background: #128C7E; }
+  #auraChatButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--accent);
+    color: var(--black);
+    border: none;
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  #auraChatWindow {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 350px;
+    max-width: calc(100vw - 40px);
+    background: #1e293b;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1001;
+    border: 1px solid var(--accent);
+    font-family: 'DM Sans', sans-serif;
+  }
+  #auraChatWindow .chat-header {
+    padding: 15px;
+    background: #0f172a;
+    border-bottom: 1px solid var(--accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+  }
+  #auraMessages {
+    height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .aura-message-bot, .aura-message-user {
+    padding: 8px 12px;
+    border-radius: 18px;
+    max-width: 85%;
+    word-wrap: break-word;
+  }
+  .aura-message-user {
+    background: var(--accent);
+    color: var(--black);
+    align-self: flex-end;
+  }
+  .aura-message-bot {
+    background: #334155;
+    color: white;
+    align-self: flex-start;
+  }
+  .aura-typing {
+    background: #334155;
+    color: #aaa;
+    padding: 8px 12px;
+    border-radius: 18px;
+    align-self: flex-start;
+    font-style: italic;
+  }
+  .chat-input-area {
+    padding: 15px;
+    border-top: 1px solid #334155;
+    display: flex;
+    gap: 10px;
+  }
+  .chat-input-area input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    background: #334155;
+    color: white;
+    font-family: inherit;
+  }
+  .chat-input-area button {
+    background: var(--accent);
+    border: none;
+    border-radius: 20px;
+    padding: 0 15px;
+    color: var(--black);
+    font-weight: bold;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">ARMOR<span>AI</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div style="display: flex; gap: 12px;">
+    <a href="#contact" class="nav-cta">Deploy Now</a>
+    <a href="login.html" class="nav-login">Login →</a>
+  </div>
+</nav>
+
+<div class="status-bar">
+  <div class="status-dot"></div>
+  <span class="status-text">All systems operational</span>
+</div>
+
+<!-- HERO SECTION -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="hero-glow"></div>
+    <div class="radar">
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-sweep"></div>
+      <div class="radar-crosshair"></div>
+      <div class="blip"></div><div class="blip"></div><div class="blip"></div><div class="blip"></div><div class="blip"></div>
+    </div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-tag">Threat Intelligence Platform</div>
+    <h1>DEFEND.<br><span class="line2">DETECT.</span><span class="accent-word">DOMINATE.</span></h1>
+    <p class="hero-desc">Armorai deploys AI-driven cyber defense architecture that learns, adapts, and eliminates threats before they breach your perimeter. Built for modern warfare in digital space.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Request Access</a>
+      <a href="#services" class="btn-ghost">View Arsenal <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-number">99<span>.8%</span></div><div class="stat-label">Threat Detection Rate</div></div>
+      <div class="stat-item"><div class="stat-number">0.3<span>ms</span></div><div class="stat-label">Response Latency</div></div>
+      <div class="stat-item"><div class="stat-number">500<span>+</span></div><div class="stat-label">Clients Secured</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-inner">
+    <div class="ticker-item"><div class="ticker-dot red"></div> CRITICAL: Ransomware cluster detected — EU region</div>
+    <div class="ticker-item"><div class="ticker-dot"></div> NEUTRALIZED: DDoS attack vector — 4.2Tbps mitigated</div>
+    <div class="ticker-item"><div class="ticker-dot"></div> MONITORING: Zero-day CVE-2026-3311 — patches deployed</div>
+    <div class="ticker-item"><div class="ticker-dot red"></div> ALERT: APT group activity — financial sector</div>
+    <div class="ticker-item"><div class="ticker-dot"></div> SECURED: 14 intrusion attempts blocked — last 60s</div>
+    <div class="ticker-item"><div class="ticker-dot"></div> UPDATE: Threat model v9.4.1 — deployed globally</div>
+    <div class="ticker-item"><div class="ticker-dot red"></div> CRITICAL: Ransomware cluster detected — EU region</div>
+    <div class="ticker-item"><div class="ticker-dot"></div> NEUTRALIZED: DDoS attack vector — 4.2Tbps mitigated</div>
+    <div class="ticker-item"><div class="ticker-dot"></div> MONITORING: Zero-day CVE-2026-3311 — patches deployed</div>
+    <div class="ticker-item"><div class="ticker-dot red"></div> ALERT: APT group activity — financial sector</div>
+    <div class="ticker-item"><div class="ticker-dot"></div> SECURED: 14 intrusion attempts blocked — last 60s</div>
+    <div class="ticker-item"><div class="ticker-dot"></div> UPDATE: Threat model v9.4.1 — deployed globally</div>
+  </div>
+</div>
+
+<!-- SERVICES SECTION (original) -->
+<section id="services">
+  <div class="services-header reveal"><div><div class="section-label">Defense Arsenal</div><div class="section-title">OUR <em>WEAPON</em><br>SYSTEMS</div></div><p class="section-sub">Six integrated defense layers working in concert — from perimeter hardening to autonomous threat response. No gaps. No compromises.</p></div>
+  <div class="services-grid"><div class="service-card reveal reveal-delay-1"><div class="service-num">01</div><div class="service-icon"><svg viewBox="0 0 48 48" fill="none"><path d="M24 4L6 12V24C6 33.9 14.1 43.2 24 46C33.9 43.2 42 33.9 42 24V12L24 4Z" stroke="#00d4ff" stroke-width="1.5"/><circle cx="24" cy="24" r="6" stroke="#00d4ff" stroke-width="1.5"/><path d="M24 18V12M24 36v-6M18 24h-6M36 24h-6" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="service-name">Threat Intelligence</div><p class="service-desc">Real-time AI monitoring across 200+ threat feeds. Predictive analysis that identifies attack vectors 72 hours before they activate.</p><div class="service-tags"><span class="tag">AI-Powered</span><span class="tag">Real-time</span></div></div>
+    <div class="service-card reveal reveal-delay-2"><div class="service-num">02</div><div class="service-icon"><svg viewBox="0 0 48 48" fill="none"><rect x="8" y="8" width="32" height="32" rx="2" stroke="#00d4ff" stroke-width="1.5"/><path d="M16 24h16M24 16v16" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round"/><circle cx="24" cy="24" r="4" stroke="#00d4ff" stroke-width="1.5"/><path d="M8 16h4M8 24h4M8 32h4M36 16h4M36 24h4M36 32h4" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="service-name">Perimeter Defense</div><p class="service-desc">Next-generation firewalls with ML-driven anomaly detection. Deep packet inspection at line speed with zero performance impact.</p><div class="service-tags"><span class="tag">Zero-trust</span><span class="tag">ML-Driven</span></div></div>
+    <div class="service-card reveal reveal-delay-3"><div class="service-num">03</div><div class="service-icon"><svg viewBox="0 0 48 48" fill="none"><path d="M6 24L24 6L42 24L24 42L6 24Z" stroke="#00d4ff" stroke-width="1.5"/><path d="M16 24L24 16L32 24L24 32L16 24Z" stroke="#00d4ff" stroke-width="1.5"/><circle cx="24" cy="24" r="2" fill="#00d4ff"/></svg></div><div class="service-name">Endpoint Security</div><p class="service-desc">AI agent deployed on every device. Behavioral analysis, ransomware rollback, and autonomous quarantine in under 300 milliseconds.</p><div class="service-tags"><span class="tag">Autonomous</span><span class="tag">Rollback</span></div></div>
+    <div class="service-card reveal reveal-delay-1"><div class="service-num">04</div><div class="service-icon"><svg viewBox="0 0 48 48" fill="none"><path d="M12 36V20L24 8L36 20V36" stroke="#00d4ff" stroke-width="1.5" stroke-linejoin="round"/><rect x="18" y="28" width="12" height="8" stroke="#00d4ff" stroke-width="1.5"/><path d="M20 16h8M16 22h16" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="service-name">SOC-as-a-Service</div><p class="service-desc">24/7 human-AI hybrid Security Operations Center. Tier-3 analysts backed by machine learning for rapid triage and response.</p><div class="service-tags"><span class="tag">24/7</span><span class="tag">Human+AI</span></div></div>
+    <div class="service-card reveal reveal-delay-2"><div class="service-num">05</div><div class="service-icon"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="16" stroke="#00d4ff" stroke-width="1.5"/><path d="M24 8C24 8 16 16 16 24C16 32 24 40 24 40" stroke="#00d4ff" stroke-width="1.5"/><path d="M24 8C24 8 32 16 32 24C32 32 24 40 24 40" stroke="#00d4ff" stroke-width="1.5"/><path d="M8 24h32" stroke="#00d4ff" stroke-width="1.5"/><path d="M10 16h28M10 32h28" stroke="#00d4ff" stroke-width="1.5" stroke-dasharray="3 3"/></svg></div><div class="service-name">Cloud Security</div><p class="service-desc">Multi-cloud posture management for AWS, Azure, GCP. Continuous compliance monitoring against CIS, NIST, and ISO 27001 frameworks.</p><div class="service-tags"><span class="tag">Multi-cloud</span><span class="tag">Compliance</span></div></div>
+    <div class="service-card reveal reveal-delay-3"><div class="service-num">06</div><div class="service-icon"><svg viewBox="0 0 48 48" fill="none"><path d="M8 14h32v20H8z" stroke="#00d4ff" stroke-width="1.5"/><path d="M16 34v6M32 34v6M12 40h24" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round"/><path d="M14 20h4v8h-4zM22 18h4v10h-4zM30 22h4v6h-4z" stroke="#00d4ff" stroke-width="1.5"/></svg></div><div class="service-name">Red Team Ops</div><p class="service-desc">Adversarial simulation using the latest TTPs from nation-state actors. We breach you before the enemy does — full kill chain emulation.</p><div class="service-tags"><span class="tag">Pen Testing</span><span class="tag">APT Sim</span></div></div>
+  </div>
+</section>
+
+<!-- PRICING SECTION -->
+<section id="pricing">
+  <div class="pricing-header reveal"><div class="section-label">Clearance Levels</div><div class="section-title">CHOOSE YOUR<br><em>DEFENSE TIER</em></div><p class="section-sub" style="margin-top:16px">Scale your protection with your threat landscape. All plans include our core AI engine and 24/7 monitoring.</p></div>
+  <div class="pricing-grid">
+    <div class="pricing-card reveal reveal-delay-1"><div class="plan-badge dim">Recon</div><div class="plan-name">Standard</div><div class="plan-price"><sup>$</sup>499</div><div class="plan-period">/ month · billed annually</div><div class="plan-divider"></div><ul class="plan-features"><li>Threat Intelligence Feed</li><li>Endpoint Protection (up to 50)</li><li>Cloud Posture Monitoring</li><li>Email Security Gateway</li><li>Weekly Vulnerability Reports</li><li class="muted">SOC-as-a-Service</li><li class="muted">Red Team Operations</li></ul><a href="#contact" class="btn-plan">Activate Standard</a></div>
+    <div class="pricing-card featured reveal reveal-delay-2"><div class="plan-badge">Operator</div><div class="plan-name">Advanced</div><div class="plan-price"><sup>$</sup>1,499</div><div class="plan-period">/ month · billed annually</div><div class="plan-divider"></div><ul class="plan-features"><li>Everything in Standard</li><li>Endpoint Protection (up to 500)</li><li>SOC-as-a-Service (24/7)</li><li>Incident Response SLA: 4hr</li><li>Zero-Trust Architecture</li><li>Quarterly Red Team Audit</li><li class="muted">Custom Threat Modeling</li></ul><a href="#contact" class="btn-plan">Activate Advanced</a></div>
+    <div class="pricing-card reveal reveal-delay-3"><div class="plan-badge dim">Command</div><div class="plan-name">Enterprise</div><div class="plan-price">Custom</div><div class="plan-period">/ tailored contract</div><div class="plan-divider"></div><ul class="plan-features"><li>Everything in Advanced</li><li>Unlimited Endpoints</li><li>Dedicated Security Team</li><li>Custom Threat Modeling</li><li>Nation-State APT Simulation</li><li>1hr Incident Response SLA</li><li>Classified Threat Briefings</li></ul><a href="#contact" class="btn-plan">Contact Command</a></div>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-info reveal"><div class="section-label">Establish Contact</div><div class="section-title">READY TO<br><em>FORTIFY?</em></div><p>Our defense architects are standing by. Tell us about your threat environment and we'll deploy a tailored security framework within 48 hours.</p><div class="contact-items"><div class="contact-item"><div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11 19.79 19.79 0 01.02 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.72 6.72l1.28-1.28a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke-width="1.5"/></svg></div><div><div class="contact-item-label">Direct Line</div><div class="contact-item-text">+2349025678716 (Founder: Nnadi Daniel)</div></div></div><div class="contact-item"><div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke-width="1.5"/></svg></div><div><div class="contact-item-label">Secure Email</div><div class="contact-item-text">nnadidaniel50@gmail.com</div></div></div><div class="contact-item"><div class="contact-item-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" stroke-width="1.5"/></svg></div><div><div class="contact-item-label">Global HQ</div><div class="contact-item-text">Lagos, Nigeria / Worldwide Deployment</div></div></div></div></div>
+    <div class="contact-form reveal reveal-delay-2"><div class="form-row"><div class="form-group"><label>First Name</label><input type="text" id="firstName" placeholder="John"></div><div class="form-group"><label>Last Name</label><input type="text" id="lastName" placeholder="Doe"></div></div><div class="form-group"><label>Organization</label><input type="text" id="org" placeholder="Acme Corp"></div><div class="form-group"><label>Email</label><input type="email" id="email" placeholder="john@acme.com"></div><div class="form-group"><label>Threat Level</label><select id="threatLevel"><option value="" disabled selected>Select your current risk profile</option><option>Low — General hardening needed</option><option>Medium — Active vulnerabilities detected</option><option>High — Under active attack</option><option>Critical — Breach in progress</option></select></div><div class="form-group"><label>Mission Brief</label><textarea id="brief" placeholder="Describe your security posture..."></textarea></div><button class="btn-submit" id="submitFormBtn">Transmit Request</button><div id="formFeedback" style="margin-top:16px; font-family:'Share Tech Mono'; font-size:12px; color:var(--accent3);"></div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">ARMOR<span>AI</span></div>
+  <div class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms</a><a href="#">Security</a></div>
+  <div class="footer-copy">© 2026 Armorai. Founded by Nnadi Daniel | nnadidaniel50@gmail.com</div>
+</footer>
+
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/2348021236553" class="whatsapp-float" target="_blank">💬 WhatsApp Support</a>
+
+<!-- Aura AI Chat Widget (General‑Purpose AI) -->
+<div id="auraChatButton">✨ Aura AI</div>
+<div id="auraChatWindow">
+  <div class="chat-header">✨ Aura AI Assistant <button id="closeAuraChat" style="background:none; border:none; color:white; font-size:20px; cursor:pointer">&times;</button></div>
+  <div id="auraMessages"><div class="aura-message-bot">🤖 Aura AI: Hello! I'm an AI that can answer any question – science, history, math, programming, general knowledge, and more. For cybersecurity solutions, please contact support. Ask me anything!</div></div>
+  <div class="chat-input-area"><input type="text" id="auraInput" placeholder="Ask me anything..."><button id="sendAuraMsg">Send</button></div>
+</div>
+
+<script>
+  // ========== CUSTOM CURSOR & ANIMATIONS ==========
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+  function animateRing() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animateRing); }
+  animateRing();
+  document.querySelectorAll('a, button, .service-card').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.width = '20px'; cursor.style.height = '20px'; ring.style.width = '56px'; ring.style.height = '56px'; });
+    el.addEventListener('mouseleave', () => { cursor.style.width = '12px'; cursor.style.height = '12px'; ring.style.width = '36px'; ring.style.height = '36px'; });
+  });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.1 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // Nav background
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => { if(window.scrollY > 60) { nav.style.background = 'rgba(2,4,6,0.98)'; nav.style.borderBottomColor = 'rgba(0,212,255,0.1)'; } else { nav.style.background = 'linear-gradient(180deg, rgba(2,4,6,0.98) 0%, transparent 100%)'; nav.style.borderBottomColor = 'rgba(0,212,255,0.06)'; } });
+  const logo = document.querySelector('.nav-logo');
+  logo.addEventListener('mouseenter', () => { logo.style.textShadow = '2px 0 #ff3c3c, -2px 0 #00d4ff'; setTimeout(() => logo.style.textShadow = '', 200); });
+
+  // Contact form
+  const submitBtn = document.getElementById('submitFormBtn');
+  const feedbackDiv = document.getElementById('formFeedback');
+  if(submitBtn) {
+    submitBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const firstName = document.getElementById('firstName')?.value || '';
+      const lastName = document.getElementById('lastName')?.value || '';
+      const email = document.getElementById('email')?.value || '';
+      if(!firstName || !lastName || !email) {
+        feedbackDiv.innerHTML = '⚠️ Please fill in at least first name, last name, and email.';
+        feedbackDiv.style.color = '#ff8888';
+        return;
+      }
+      feedbackDiv.innerHTML = '✅ Transmission received. Armorai will contact you within 24 hours.';
+      feedbackDiv.style.color = '#00ff88';
+      document.getElementById('firstName').value = '';
+      document.getElementById('lastName').value = '';
+      document.getElementById('org').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('threatLevel').value = '';
+      document.getElementById('brief').value = '';
+      setTimeout(() => { feedbackDiv.innerHTML = ''; }, 5000);
+    });
+  }
+
+  // ========== AURA AI – GENERAL PURPOSE ==========
+  const chatBtn = document.getElementById('auraChatButton');
+  const chatWin = document.getElementById('auraChatWindow');
+  const closeChat = document.getElementById('closeAuraChat');
+  const sendBtn = document.getElementById('sendAuraMsg');
+  const inputField = document.getElementById('auraInput');
+  const messagesDiv = document.getElementById('auraMessages');
+
+  function openChat() { chatWin.style.display = 'flex'; }
+  function closeChatWindow() { chatWin.style.display = 'none'; }
+  function addUserMessage(t) { let d=document.createElement('div'); d.className='aura-message-user'; d.textContent=t; messagesDiv.appendChild(d); messagesDiv.scrollTop=messagesDiv.scrollHeight; }
+  function addAuraMessage(t) { let d=document.createElement('div'); d.className='aura-message-bot'; d.textContent=t; messagesDiv.appendChild(d); messagesDiv.scrollTop=messagesDiv.scrollHeight; }
+  function showTyping() { let d=document.createElement('div'); d.id='auraTyping'; d.className='aura-typing'; d.textContent='Aura is thinking...'; messagesDiv.appendChild(d); messagesDiv.scrollTop=messagesDiv.scrollHeight; }
+  function removeTyping() { let t=document.getElementById('auraTyping'); if(t) t.remove(); }
+
+  function isSolutionRequest(text) {
+    const lower = text.toLowerCase();
+    const problemKeywords = ['fix', 'stop', 'remove', 'protect', 'secure', 'hack', 'breach', 'ransomware', 'solution', 'help', 'resolve', 'mitigate', 'how to', 'remediate', 'troubleshoot', 'repair', 'clean', 'restore', 'recover', 'delete virus', 'malware removal', 'stop attack', 'prevent breach', 'secure my', 'hacked', 'compromised'];
+    return problemKeywords.some(kw => lower.includes(kw));
+  }
+
+  function isCreatorQuestion(text) {
+    const lower = text.toLowerCase();
+    const creatorPatterns = ['who created you', 'who is your creator', 'who founded you', 'who made you', 'who built you', 'your creator', 'your founder', 'who developed you', 'who programmed you', 'who designed you'];
+    return creatorPatterns.some(p => lower.includes(p));
+  }
+
+  function aiResponse(userMsg) {
+    const lower = userMsg.toLowerCase();
+
+    if (isCreatorQuestion(userMsg)) {
+      return "I am an AI assistant created by Nnadi Daniel, founder of Armorai – a cybersecurity organization specializing in AI-driven defense. I can answer any general question. For cybersecurity solutions, please contact support.";
+    }
+
+    if (isSolutionRequest(userMsg)) {
+      return "For assistance with this cybersecurity issue, please reach out to our Armorai Support Services via the contact form or live support. I can, however, answer general questions about other topics – ask me anything!";
+    }
+
+    // Greetings
+    if (lower.match(/^(hello|hi|hey|greetings|sup|yo)$/)) return "Hello! I'm Aura AI, an intelligent assistant. I can answer questions about science, history, technology, programming, mathematics, general knowledge, and more. What would you like to know?";
+    if (lower.includes('how are you')) return "I'm operating perfectly, thank you! Ready to assist with any question you have.";
+    if (lower.includes('what is your name')) return "My name is Aura AI. I'm an intelligent assistant created by Nnadi Daniel for Armorai.";
+    if (lower.includes('what can you do')) return "I can answer almost any question – explain concepts, solve math problems, write code, tell you historical facts, discuss science, or just have a friendly chat. The only thing I can't do is give step‑by‑step fixes for cybersecurity incidents (those go to our support team).";
+    
+    // Science & Math
+    if (lower.includes('what is') && (lower.includes('gravity') || lower.includes('general relativity'))) return "Gravity is a fundamental force that attracts two bodies with mass. General relativity, Einstein's theory, describes gravity as the curvature of spacetime caused by mass and energy.";
+    if (lower.includes('what is') && (lower.includes('quantum') || lower.includes('quantum mechanics'))) return "Quantum mechanics is the branch of physics that deals with the behavior of particles at atomic and subatomic scales. Key principles include superposition and entanglement.";
+    if (lower.includes('what is') && lower.includes('photosynthesis')) return "Photosynthesis is the process by which plants convert light energy into chemical energy, producing glucose and oxygen.";
+    if (lower.includes('what is') && lower.includes('dna')) return "DNA (deoxyribonucleic acid) is the molecule that carries genetic instructions for life, shaped like a double helix.";
+    if (lower.includes('solve') && lower.includes('equation') || lower.includes('math')) return "I can help with math problems! Please provide the specific equation or problem, and I'll do my best to explain the solution.";
+    
+    // History
+    if (lower.includes('who was') && lower.includes('napoleon')) return "Napoleon Bonaparte was a French military leader and emperor who conquered much of Europe in the early 19th century.";
+    if (lower.includes('who was') && lower.includes('albert einstein')) return "Albert Einstein was a theoretical physicist who developed the theory of relativity and the famous equation E=mc².";
+    if (lower.includes('who was') && lower.includes('martin luther king')) return "Martin Luther King Jr. was a civil rights leader who advocated for racial equality through nonviolent resistance.";
+    
+    // Technology & Programming
+    if (lower.includes('what is') && lower.includes('python')) return "Python is a high‑level programming language known for its readability and versatility, used in web development, data science, AI, and more.";
+    if (lower.includes('what is') && lower.includes('javascript')) return "JavaScript is a programming language that powers interactive web pages and is also used on servers via Node.js.";
+    if (lower.includes('what is') && lower.includes('api')) return "API stands for Application Programming Interface – it defines how different software components should interact.";
+    if (lower.includes('what is') && lower.includes('blockchain')) return "Blockchain is a distributed ledger technology where data is stored in cryptographically linked blocks, used in cryptocurrencies and beyond.";
+    if (lower.includes('what is') && lower.includes('machine learning')) return "Machine learning is a subset of AI where algorithms learn from data without being explicitly programmed.";
+    
+    // Geography
+    if (lower.includes('capital of') && lower.includes('france')) return "The capital of France is Paris.";
+    if (lower.includes('capital of') && lower.includes('japan')) return "The capital of Japan is Tokyo.";
+    if (lower.includes('longest river')) return "The longest river in the world is the Nile River (about 6,650 km).";
+    if (lower.includes('highest mountain')) return "The highest mountain on Earth is Mount Everest, at 8,848.86 meters.";
+    
+    // Jokes & fun
+    if (lower.includes('tell me a joke')) return "Why do programmers prefer dark mode? Because light attracts bugs! 😄";
+    if (lower.includes('what is the meaning of life')) return "The meaning of life is a philosophical question with many answers. Some say 42 (from Douglas Adams), but I'd suggest finding your own purpose and happiness.";
+    
+    return `That's an interesting question! I'm designed to answer a wide range of topics. Could you be more specific? Try asking about science, history, programming, math, or general knowledge. For example: "What is Python?" or "Explain gravity".`;
+  }
+
+  sendBtn.onclick = () => {
+    let msg = inputField.value.trim();
+    if (!msg) return;
+    addUserMessage(msg);
+    inputField.value = '';
+    showTyping();
+    setTimeout(() => {
+      removeTyping();
+      addAuraMessage(aiResponse(msg));
+    }, 500);
+  };
+  inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendBtn.click(); });
+  chatBtn.onclick = openChat;
+  closeChat.onclick = closeChatWindow;
+</script>
+</body>
+</html>
