@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArmorAI – Job Simulations</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="certifications.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #020406;
+    color: #c8dce8;
+    font-family: 'Inter', sans-serif;
+  }
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 60px;
+    background: #020406dd;
+    backdrop-filter: blur(10px);
+    z-index: 100;
+  }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 6px; color: #e8f4ff; text-decoration: none; }
+  .nav-logo span { color: #00d4ff; }
+  .nav-links a, .logout-btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #4a6478;
+    text-decoration: none;
+    margin-left: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .certification-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 120px 60px 60px;
+  }
+  .company-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+  .company-card {
+    background: #0d1e2e;
+    border: 1px solid #0f2d45;
+    padding: 24px;
+  }
+  .company-card h3 { font-size: 24px; margin-bottom: 16px; }
+  .domain-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .domain-btn {
+    background: rgba(0,212,255,0.1);
+    border: 1px solid #00d4ff;
+    padding: 6px 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    color: #00d4ff;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9);
+    backdrop-filter: blur(12px);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-card {
+    background: #0d1e2e;
+    border: 1px solid #00d4ff;
+    padding: 32px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .question-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
+  .timer { font-family: monospace; font-size: 20px; background: #000; padding: 6px 12px; }
+  .warning { background: rgba(255,60,60,0.2); border: 1px solid #ff3c3c; padding: 8px; text-align: center; margin-bottom: 16px; }
+  .question-text { font-weight: 600; margin-bottom: 20px; font-size: 18px; }
+  .option { display: block; margin: 8px 0 8px 20px; cursor: pointer; }
+  .btn-primary, .btn-secondary {
+    font-family: 'Share Tech Mono', monospace;
+    padding: 12px 24px;
+    cursor: pointer;
+    margin-top: 20px;
+    border: none;
+  }
+  .btn-primary { background: #00d4ff; color: #000; }
+  .btn-secondary { background: transparent; border: 1px solid #00d4ff; color: #00d4ff; margin-left: 16px; }
+  .certificate {
+    background: white;
+    color: black;
+    padding: 40px;
+    text-align: center;
+    font-family: 'Times New Roman', serif;
+  }
+  footer { text-align: center; padding: 30px; border-top: 1px solid #0f2d45; margin-top: 60px; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">ARMOR<span>AI</span></a>
+  <div>
+    <a href="dashboard.html" class="nav-links">Dashboard</a>
+    <a href="profile.html" class="nav-links">Profile</a>
+    <a href="certifications.html" class="nav-links">Certifications</a>
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+  </div>
+</nav>
+
+<div class="certification-container">
+  <h1>Job Simulations</h1>
+  <p>Earn a certificate by scoring 100% on any 10-question quiz.</p>
+  <div id="companyGrid" class="company-grid"></div>
+</div>
+
+<div id="quizModal" class="modal">
+  <div class="modal-card">
+    <div class="question-header"><h2 id="quizTitle"></h2><div class="timer" id="timerDisplay">00:30</div></div>
+    <div id="warningMsg" class="warning" style="display:none;">⚠️ Switching tabs is not allowed.</div>
+    <div id="quizQuestions"></div>
+    <button id="submitQuiz" class="btn-primary">Submit Quiz</button>
+    <button id="closeQuizModal" class="btn-secondary">Cancel</button>
+    <div id="quizResult"></div>
+  </div>
+</div>
+
+<div id="certificateModal" class="modal">
+  <div class="modal-card">
+    <div id="certificateContent"></div>
+    <button id="downloadPdf" class="btn-primary">Download PDF</button>
+    <button id="shareLinkedIn" class="btn-secondary">Share on LinkedIn</button>
+    <button id="closeCertModal" class="btn-secondary">Close</button>
+  </div>
+</div>
+
+<footer>© 2026 ArmorAI — AI‑Driven Job Simulations</footer>
+
+<script>
+  const currentUser = localStorage.getItem('armorai_current_user');
+  if (!currentUser) window.location.href = 'login.html';
+  document.getElementById('logoutBtn').onclick = () => { localStorage.removeItem('armorai_current_user'); window.location.href = 'login.html'; };
+
+  function loadCompanies() {
+    const grid = document.getElementById('companyGrid');
+    grid.innerHTML = '';
+    companies.forEach(company => {
+      const card = document.createElement('div');
+      card.className = 'company-card';
+      card.innerHTML = `<h3>${company.logo} ${company.name}</h3><div class="domain-list">${company.domains.map(domain => `<button class="domain-btn" data-company="${company.id}" data-domain="${domain}">${domain}</button>`).join('')}</div>`;
+      grid.appendChild(card);
+    });
+    document.querySelectorAll('.domain-btn').forEach(btn => {
+      btn.addEventListener('click', () => startQuiz(btn.dataset.company, btn.dataset.domain));
+    });
+  }
+
+  let currentQuiz = null, timerInterval = null, timeLeft = 30, cheatingTimeout = null, quizActive = false;
+
+  function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      if (!quizActive) return;
+      if (timeLeft <= 0) { clearInterval(timerInterval); handleTimeout(); }
+      else { timeLeft--; document.getElementById('timerDisplay').innerText = `00:${timeLeft.toString().padStart(2,'0')}`; }
+    }, 1000);
+  }
+
+  function handleTimeout() {
+    document.getElementById('quizResult').innerHTML = '<span style="color:#ff8888;">Time ran out. Moving to next...</span>';
+    setTimeout(() => { currentQuiz.userAnswers[currentQuiz.currentQIndex] = null; goToNextQuestion(); }, 1500);
+  }
+
+  function goToNextQuestion() {
+    if (currentQuiz.currentQIndex + 1 < currentQuiz.questions.length) {
+      currentQuiz.currentQIndex++; timeLeft = 30; document.getElementById('timerDisplay').innerText = '00:30'; renderCurrentQuestion(); document.getElementById('warningMsg').style.display = 'none';
+    } else {
+      let score = 0;
+      for (let i = 0; i < currentQuiz.questions.length; i++) if (currentQuiz.userAnswers[i] === currentQuiz.questions[i].correct) score++;
+      if (score === 10) { document.getElementById('quizResult').innerHTML = '<span style="color:#00ff88;">Perfect score! Generating certificate...</span>'; clearInterval(timerInterval); quizActive = false; generateCertificate(); }
+      else { document.getElementById('quizResult').innerHTML = `<span style="color:#ff8888;">You scored ${score}/10. Need 10/10 for certificate.</span>`; clearInterval(timerInterval); quizActive = false; }
+    }
+  }
+
+  function renderCurrentQuestion() {
+    const q = currentQuiz.questions[currentQuiz.currentQIndex];
+    const userAnswer = currentQuiz.userAnswers[currentQuiz.currentQIndex];
+    let html = `<div class="question-text">${currentQuiz.currentQIndex+1}. ${q.text}</div><div class="options">${q.options.map((opt, idx) => `<label class="option"><input type="radio" name="q" value="${idx}" ${userAnswer === idx ? 'checked' : ''}> ${opt}</label>`).join('')}</div>`;
+    document.getElementById('quizQuestions').innerHTML = html;
+    document.querySelectorAll('input[type="radio"]').forEach(radio => radio.addEventListener('change', (e) => { currentQuiz.userAnswers[currentQuiz.currentQIndex] = parseInt(e.target.value); }));
+  }
+
+  function startQuiz(companyId, domain) {
+    const questions = getRandomQuestions(domain, 10);
+    if (!questions.length) { alert('No questions for this domain yet.'); return; }
+    currentQuiz = { companyId, domain, questions, userAnswers: new Array(10).fill(null), currentQIndex: 0 };
+    timeLeft = 30; document.getElementById('timerDisplay').innerText = '00:30'; renderCurrentQuestion();
+    document.getElementById('quizModal').style.display = 'flex'; document.getElementById('quizResult').innerHTML = ''; document.getElementById('warningMsg').style.display = 'none';
+    quizActive = true; startTimer();
+    const handleVisibilityChange = () => {
+      if (!quizActive) return;
+      if (document.hidden) { clearInterval(timerInterval); document.getElementById('warningMsg').style.display = 'block'; if (cheatingTimeout) clearTimeout(cheatingTimeout); cheatingTimeout = setTimeout(() => { if (quizActive) { clearInterval(timerInterval); quizActive = false; document.getElementById('quizResult').innerHTML = '<span style="color:#ff8888;">Quiz terminated due to tab switching.</span>'; setTimeout(() => document.getElementById('quizModal').style.display = 'none', 2000); } }, 3000); }
+      else { if (cheatingTimeout) clearTimeout(cheatingTimeout); document.getElementById('warningMsg').style.display = 'none'; if (quizActive) startTimer(); }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.cleanupVisibility = () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }
+
+  document.getElementById('submitQuiz').onclick = () => {
+    if (!quizActive) return;
+    if (currentQuiz.currentQIndex + 1 === currentQuiz.questions.length) {
+      let score = 0;
+      for (let i = 0; i < currentQuiz.questions.length; i++) if (currentQuiz.userAnswers[i] === currentQuiz.questions[i].correct) score++;
+      if (score === 10) { document.getElementById('quizResult').innerHTML = '<span style="color:#00ff88;">Perfect score! Generating certificate...</span>'; clearInterval(timerInterval); quizActive = false; generateCertificate(); }
+      else { document.getElementById('quizResult').innerHTML = `<span style="color:#ff8888;">You scored ${score}/10. Need 10/10 for certificate.</span>`; clearInterval(timerInterval); quizActive = false; }
+    } else { goToNextQuestion(); }
+  };
+  document.getElementById('closeQuizModal').onclick = () => { clearInterval(timerInterval); quizActive = false; if (window.cleanupVisibility) window.cleanupVisibility(); document.getElementById('quizModal').style.display = 'none'; };
+
+  function generateCertificate() {
+    const company = companies.find(c => c.id === currentQuiz.companyId);
+    const userName = currentUser;
+    const jobRole = currentQuiz.domain;
+    const completionDate = new Date().toISOString().split('T')[0];
+    const verificationCode = 'ARM-' + Math.random().toString(36).substring(2, 15).toUpperCase();
+    const verificationUrl = `${window.location.origin}/verify?code=${verificationCode}`;
+    let userCerts = JSON.parse(localStorage.getItem('armorai_certs') || '{}');
+    if (!userCerts[currentUser]) userCerts[currentUser] = [];
+    userCerts[currentUser].push({ companyId: currentQuiz.companyId, domain: currentQuiz.domain, date: completionDate, code: verificationCode, verificationUrl });
+    localStorage.setItem('armorai_certs', JSON.stringify(userCerts));
+    document.getElementById('certificateContent').innerHTML = `<div class="certificate" id="certificateToPrint"><div style="border:2px solid #00d4ff;padding:20px;"><div style="display:flex;justify-content:space-between;"><div style="font-size:24px;font-weight:bold;">${company.logo} ${company.name}</div><div style="font-size:18px;font-weight:bold;color:#00d4ff;">ARMORAI</div></div><hr><h1>Certificate of Completion</h1><p>This is to certify that</p><h2>${userName}</h2><p>has successfully completed the</p><h3>${company.name} – ${jobRole}</h3><p>job simulation with a perfect score.</p><p>Date: ${completionDate}</p><p>Verification Code: ${verificationCode}</p><p>Verify at: <a href="${verificationUrl}" target="_blank">${verificationUrl}</a></p><div><p>Nnadi Daniel</p><p>Founder, ArmorAI</p><p>✍️ Digitally Signed</p></div></div></div>`;
+    document.getElementById('quizModal').style.display = 'none'; document.getElementById('certificateModal').style.display = 'flex';
+    window.currentCertUrl = verificationUrl;
+  }
+  document.getElementById('downloadPdf').onclick = () => { const element = document.getElementById('certificateToPrint'); html2pdf().from(element).save(); };
+  document.getElementById('shareLinkedIn').onclick = () => { window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.currentCertUrl)}&title=ArmorAI%20Certification&summary=I%20earned%20a%20certification%20in%20${currentQuiz.domain}%20from%20${companies.find(c=>c.id===currentQuiz.companyId).name}!`, '_blank'); };
+  document.getElementById('closeCertModal').onclick = () => document.getElementById('certificateModal').style.display = 'none';
+  loadCompanies();
+</script>
+</body>
+</html>
