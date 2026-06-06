@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArmorAI – Certification Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: radial-gradient(circle at 20% 30%, #0a0f1e, #010101);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #eef2ff;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes gridMove { 0% { transform: translate(0,0); } 100% { transform: translate(50px,50px); } }
+  .orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.3; z-index: -1; }
+  .orb1 { width: 500px; height: 500px; background: #00d4ff; top: -200px; left: -200px; }
+  .orb2 { width: 600px; height: 600px; background: #7a2be0; bottom: -300px; right: -200px; }
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background: rgba(2,6,20,0.75);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(0,212,255,0.2);
+  }
+  .nav-logo { font-size: 28px; font-weight: 800; font-family: 'Orbitron', sans-serif; background: linear-gradient(135deg, #fff, #0ff); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 2px; }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a, .logout-btn { font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: #ccd6f6; text-decoration: none; background: none; border: none; cursor: pointer; }
+  .logout-btn:hover { color: #0ff; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 120px 60px 80px; }
+  .page-title { font-size: 48px; font-weight: 800; font-family: 'Orbitron', sans-serif; background: linear-gradient(120deg, #fff, #0ff); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 16px; }
+  .page-sub { color: #8ea3c2; margin-bottom: 48px; font-size: 16px; }
+  .company-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 28px; }
+  .company-card { background: rgba(10,18,30,0.7); backdrop-filter: blur(12px); border: 1px solid rgba(0,212,255,0.2); border-radius: 28px; padding: 24px; transition: all 0.3s; }
+  .company-card:hover { border-color: #0ff; }
+  .company-card h3 { font-size: 24px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; color: #0ff; font-family: 'Orbitron', sans-serif; }
+  .domain-list { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+  .domain-btn { background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); padding: 8px 16px; border-radius: 40px; font-size: 12px; font-weight: 500; cursor: pointer; color: #ccd6f6; }
+  .domain-btn:hover { background: rgba(0,212,255,0.3); border-color: #0ff; color: #0ff; }
+  .quiz-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(16px); z-index: 2000; justify-content: center; align-items: center; }
+  .quiz-card { background: rgba(10,18,30,0.95); border: 1px solid rgba(0,212,255,0.3); border-radius: 32px; padding: 32px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; }
+  .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .quiz-title { font-size: 24px; font-weight: 600; color: #0ff; }
+  .timer { font-family: monospace; font-size: 20px; background: rgba(0,0,0,0.5); padding: 6px 12px; border-radius: 40px; color: #0ff; }
+  .question-text { font-size: 20px; font-weight: 500; margin-bottom: 28px; }
+  .options { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+  .option { background: rgba(20,30,50,0.8); border: 1px solid rgba(0,212,255,0.2); border-radius: 60px; padding: 14px 20px; cursor: pointer; font-size: 15px; }
+  .option:hover { background: rgba(0,212,255,0.1); border-color: #0ff; }
+  .option.selected { background: rgba(0,212,255,0.2); border-color: #0ff; }
+  .feedback { padding: 12px 16px; border-radius: 16px; margin: 16px 0; font-size: 14px; }
+  .feedback.correct { background: rgba(0,255,100,0.15); border-left: 4px solid #0f0; color: #8effaa; }
+  .feedback.incorrect { background: rgba(255,60,60,0.15); border-left: 4px solid #f33; color: #ffaa88; }
+  .quiz-buttons { display: flex; gap: 16px; margin-top: 20px; }
+  .btn-glow { background: linear-gradient(90deg, #0ff, #7a2be0); border: none; padding: 12px 28px; border-radius: 40px; font-weight: 600; color: #010101; cursor: pointer; font-size: 14px; }
+  .cert-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(16px); z-index: 2000; justify-content: center; align-items: center; }
+  .cert-card { background: rgba(10,18,30,0.95); border: 1px solid rgba(0,212,255,0.3); border-radius: 32px; padding: 32px; width: 90%; max-width: 600px; text-align: center; }
+  .cert-card h1 { color: #1a5d8f; margin-bottom: 20px; }
+  .cert-card h2 { color: #1a5d8f; margin: 20px 0; }
+  .cert-card h3 { color: #c9a84c; margin: 10px 0; }
+  .signature { margin-top: 30px; text-align: right; }
+  footer { text-align: center; padding: 30px; border-top: 1px solid rgba(0,212,255,0.1); margin-top: 60px; font-size: 12px; color: #6c86a3; }
+  @media (max-width: 700px) { .container { padding: 100px 24px 60px; } }
+</style>
+</head>
+<body>
+<div class="orb orb1"></div><div class="orb orb2"></div>
+
+<nav>
+  <div class="nav-logo">ARMORAI</div>
+  <div class="nav-links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html">Profile</a>
+    <a href="quiz.html">Certifications</a>
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+  </div>
+</nav>
+
+<div class="container">
+  <h1 class="page-title">Job <span style="color:#0ff;">Simulations</span></h1>
+  <p class="page-sub">Earn a certificate by scoring 100% on any 10‑question quiz. Click any domain button below.</p>
+  <div id="companyGrid" class="company-grid"></div>
+</div>
+
+<!-- Quiz Modal -->
+<div id="quizModal" class="quiz-modal">
+  <div class="quiz-card">
+    <div class="quiz-header"><div class="quiz-title" id="quizTitle"></div><div class="timer" id="timerDisplay">00:30</div></div>
+    <div id="quizQuestions"></div>
+    <div class="quiz-buttons"><button id="submitAnswer" class="btn-glow">Submit Answer</button><button id="closeQuiz" class="btn-glow btn-secondary">Close</button></div>
+    <div id="quizResult"></div>
+  </div>
+</div>
+
+<!-- Certificate Modal -->
+<div id="certModal" class="cert-modal">
+  <div class="cert-card">
+    <div id="certContent"></div>
+    <button id="closeCert" class="btn-glow" style="margin-top:20px;">Close</button>
+  </div>
+</div>
+
+<footer>© 2026 ArmorAI — AI‑Driven Certifications</footer>
+
+<script>
+  // AUTH
+  const currentUser = localStorage.getItem('armorai_current_user');
+  if (!currentUser) window.location.href = 'login.html';
+  const users = JSON.parse(localStorage.getItem('armorai_users') || '{}');
+  const userName = users[currentUser]?.fullName || currentUser.split('@')[0];
+  document.getElementById('logoutBtn').onclick = () => {
+    localStorage.removeItem('armorai_current_user');
+    window.location.href = 'login.html';
+  };
+
+  // 20 COMPANIES
+  const companies = [
+    { id: "google", name: "Google", logo: "fab fa-google", domains: ["Cybersecurity", "Software Development", "Data Analytics", "Cloud Engineering"] },
+    { id: "microsoft", name: "Microsoft", logo: "fab fa-microsoft", domains: ["Software Development", "Cloud Engineering", "Data Analytics", "Database", "Artificial Intelligence"] },
+    { id: "aws", name: "Amazon Web Services", logo: "fab fa-aws", domains: ["Cybersecurity", "Cloud Engineering", "Database", "Networking"] },
+    { id: "meta", name: "Meta", logo: "fab fa-meta", domains: ["Software Development", "Web Design", "Data Analytics", "Cybersecurity"] },
+    { id: "tesla", name: "Tesla", logo: "fas fa-car", domains: ["Software Development", "Artificial Intelligence", "Cybersecurity", "Data Analytics"] },
+    { id: "apple", name: "Apple", logo: "fab fa-apple", domains: ["Software Development", "Cybersecurity", "Web Design", "Artificial Intelligence"] },
+    { id: "netflix", name: "Netflix", logo: "fab fa-netflix", domains: ["Software Development", "Data Analytics", "Cloud Engineering", "Cybersecurity"] },
+    { id: "nvidia", name: "NVIDIA", logo: "fas fa-microchip", domains: ["Artificial Intelligence", "Software Development", "Cybersecurity", "Cloud Engineering"] },
+    { id: "intel", name: "Intel", logo: "fab fa-intel", domains: ["Software Development", "Cybersecurity", "Artificial Intelligence"] },
+    { id: "amd", name: "AMD", logo: "fas fa-microchip", domains: ["Software Development", "Artificial Intelligence", "Cybersecurity"] },
+    { id: "salesforce", name: "Salesforce", logo: "fab fa-salesforce", domains: ["Software Development", "Data Analytics", "Cloud Engineering"] },
+    { id: "oracle", name: "Oracle", logo: "fas fa-database", domains: ["Database", "Cloud Engineering", "Cybersecurity"] },
+    { id: "ibm", name: "IBM", logo: "fab fa-ibm", domains: ["Artificial Intelligence", "Cybersecurity", "Database"] },
+    { id: "cisco", name: "Cisco", logo: "fas fa-network-wired", domains: ["Networking", "Cybersecurity", "Cloud Engineering"] },
+    { id: "adobe", name: "Adobe", logo: "fab fa-adobe", domains: ["Web Design", "Software Development", "Data Analytics"] },
+    { id: "paypal", name: "PayPal", logo: "fab fa-paypal", domains: ["Software Development", "Cybersecurity", "Data Analytics"] },
+    { id: "uber", name: "Uber", logo: "fas fa-taxi", domains: ["Software Development", "Data Analytics", "Cloud Engineering"] },
+    { id: "airbnb", name: "Airbnb", logo: "fas fa-home", domains: ["Web Design", "Software Development", "Data Analytics"] },
+    { id: "spotify", name: "Spotify", logo: "fab fa-spotify", domains: ["Software Development", "Data Analytics", "Cloud Engineering"] },
+    { id: "twitter", name: "Twitter", logo: "fab fa-twitter", domains: ["Software Development", "Data Analytics", "Cybersecurity"] }
+  ];
+
+  // QUESTIONS
+  const questionBank = {
+    "Cybersecurity": [
+      { text: "What is the primary purpose of a firewall?", opts: ["To detect viruses", "To monitor and filter network traffic", "To encrypt data", "To manage passwords"], correct: 1, exp: "Firewalls monitor and filter network traffic." },
+      { text: "What does VPN stand for?", opts: ["Virtual Private Network", "Very Private Network", "Virtual Protected Node", "Verified Personal Network"], correct: 0, exp: "VPN creates a secure, encrypted connection." },
+      { text: "What is a zero-day vulnerability?", opts: ["A vulnerability known for zero days", "A patched vulnerability", "A vulnerability with no available fix", "A vulnerability in zero-day software"], correct: 2, exp: "No patch exists yet." },
+      { text: "Which protocol is used for secure web browsing?", opts: ["HTTP", "FTP", "HTTPS", "SSH"], correct: 2, exp: "HTTPS encrypts data." },
+      { text: "What is the main goal of a DDoS attack?", opts: ["Data theft", "Disrupt service availability", "Gain unauthorized access", "Encrypt files"], correct: 1, exp: "Overwhelms a service." },
+      { text: "Which is a form of social engineering?", opts: ["Phishing", "SQL injection", "Buffer overflow", "Man-in-the-middle"], correct: 0, exp: "Phishing manipulates users." },
+      { text: "What does IDS stand for?", opts: ["Intrusion Detection System", "Internet Data Service", "Internal Drive System", "Integrated Defense System"], correct: 0, exp: "Detects suspicious activity." },
+      { text: "Which encryption is considered strong?", opts: ["DES", "RSA-2048", "MD5", "RC4"], correct: 1, exp: "RSA-2048 is widely used." },
+      { text: "What is a common phishing indicator?", opts: ["Spelling errors", "Unknown sender", "Urgent request", "All of the above"], correct: 3, exp: "Multiple red flags." },
+      { text: "Best defense against ransomware?", opts: ["Regular backups", "Antivirus only", "Firewall only", "Disable internet"], correct: 0, exp: "Backups allow recovery." }
+    ],
+    "Software Development": [
+      { text: "Which data structure uses LIFO?", opts: ["Queue", "Array", "Stack", "Linked List"], correct: 2, exp: "Stack is Last In, First Out." },
+      { text: "What does git commit do?", opts: ["Saves changes locally", "Uploads to remote", "Shows status", "Creates branch"], correct: 0, exp: "Saves staged changes." },
+      { text: "What does API stand for?", opts: ["Application Programming Interface", "Advanced Programming Integration", "Application Protocol Interface", "Automated Program Interface"], correct: 0, exp: "Defines software interactions." },
+      { text: "Which language is for Android?", opts: ["Swift", "Kotlin", "C#", "PHP"], correct: 1, exp: "Kotlin is official for Android." },
+      { text: "What is a constructor?", opts: ["Initialize an object", "Destroy an object", "Define methods", "Create a class"], correct: 0, exp: "Initializes object state." },
+      { text: "Which is a NoSQL database?", opts: ["MySQL", "PostgreSQL", "MongoDB", "SQLite"], correct: 2, exp: "MongoDB is document-oriented." },
+      { text: "Time complexity of binary search?", opts: ["O(n)", "O(log n)", "O(n²)", "O(1)"], correct: 1, exp: "Logarithmic time." },
+      { text: "What does CSS stand for?", opts: ["Cascading Style Sheets", "Creative Style Sheets", "Computer Style Sheets", "Colorful Style Sheets"], correct: 0, exp: "Styles HTML." },
+      { text: "Which keyword defines a constant in JS?", opts: ["let", "var", "const", "static"], correct: 2, exp: "const declares constants." },
+      { text: "What is a closure?", opts: ["Function with outer scope access", "Loop construct", "Built-in object", "Variable type"], correct: 0, exp: "Remembers its environment." }
+    ],
+    "Data Analytics": [
+      { text: "What does SQL stand for?", opts: ["Structured Query Language", "Simple Query Language", "Standard Query Language", "Sequential Query Language"], correct: 0, exp: "Manages databases." },
+      { text: "Which Python library for data visualization?", opts: ["Matplotlib", "NumPy", "Pandas", "Scikit-learn"], correct: 0, exp: "Matplotlib creates charts." },
+      { text: "What is data cleaning?", opts: ["Removing errors", "Adding data", "Encrypting data", "Backing up data"], correct: 0, exp: "Fixes errors." }
+    ],
+    "Cloud Engineering": [
+      { text: "What does IaaS stand for?", opts: ["Infrastructure as a Service", "Integration as a Service", "Internet as a Service", "Information as a Service"], correct: 0, exp: "Virtual resources." },
+      { text: "Which AWS service is for storage?", opts: ["S3", "EC2", "Lambda", "RDS"], correct: 0, exp: "S3 is object storage." },
+      { text: "What is serverless?", opts: ["No server management", "No servers", "Physical servers", "Mainframe"], correct: 0, exp: "Abstracts infrastructure." }
+    ],
+    "Database": [
+      { text: "What is a primary key?", opts: ["Unique identifier", "Foreign key", "Index", "Query"], correct: 0, exp: "Uniquely identifies a row." },
+      { text: "Which SQL retrieves data?", opts: ["SELECT", "INSERT", "UPDATE", "DELETE"], correct: 0, exp: "SELECT queries data." }
+    ],
+    "Artificial Intelligence": [
+      { text: "What is machine learning?", opts: ["A subset of AI", "Database", "Language", "Hardware"], correct: 0, exp: "Branch of AI." },
+      { text: "Which algorithm is for classification?", opts: ["Decision tree", "Linear regression", "K-means", "PCA"], correct: 0, exp: "Decision trees classify." }
+    ],
+    "Web Design": [
+      { text: "What does HTML stand for?", opts: ["Hyper Text Markup Language", "High Tech Modern Language", "Hyper Transfer Markup Language", "Home Tool Markup Language"], correct: 0, exp: "Structures web content." },
+      { text: "Which CSS property changes background color?", opts: ["background-color", "color", "bgcolor", "background"], correct: 0, exp: "Sets background color." }
+    ],
+    "Networking": [
+      { text: "What is the OSI model?", opts: ["Conceptual network model", "Cable type", "Security protocol", "Language"], correct: 0, exp: "Standardizes communication." },
+      { text: "Which device connects different networks?", opts: ["Router", "Switch", "Hub", "Modem"], correct: 0, exp: "Routers connect networks." }
+    ]
+  };
+
+  function getRandomQuestions(domain, num = 10) {
+    let bank = questionBank[domain];
+    if (!bank) bank = questionBank["Cybersecurity"];
+    const shuffled = [...bank];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.slice(0, num);
+  }
+
+  // Load companies
+  function loadCompanies() {
+    const grid = document.getElementById('companyGrid');
+    grid.innerHTML = '';
+    companies.forEach(company => {
+      const card = document.createElement('div');
+      card.className = 'company-card';
+      card.innerHTML = `<h3><i class="${company.logo}"></i> ${company.name}</h3><div class="domain-list">${company.domains.map(d => `<button class="domain-btn" data-company="${company.id}" data-domain="${d}">${d}</button>`).join('')}</div>`;
+      grid.appendChild(card);
+    });
+    document.querySelectorAll('.domain-btn').forEach(btn => {
+      btn.onclick = () => {
+        const companyId = btn.dataset.company;
+        const domain = btn.dataset.domain;
+        startQuiz(companyId, domain);
+      };
+    });
+  }
+
+  // Quiz variables
+  let currentQuestions = [], currentIndex = 0, userAnswers = [], currentCompany = null, currentDomain = null;
+  let selectedOption = null, questionAnswered = false, timerInterval = null, timeLeft = 30, quizActive = false;
+
+  function startQuiz(companyId, domain) {
+    const questions = getRandomQuestions(domain, 10);
+    if (!questions.length) { alert('No questions yet'); return; }
+    currentCompany = companies.find(c => c.id === companyId);
+    currentDomain = domain;
+    currentQuestions = questions;
+    currentIndex = 0;
+    userAnswers = new Array(10).fill(null);
+    selectedOption = null;
+    questionAnswered = false;
+    timeLeft = 30;
+    document.getElementById('timerDisplay').innerText = '00:30';
+    quizActive = true;
+    renderQuestion();
+    document.getElementById('quizModal').style.display = 'flex';
+    document.getElementById('quizResult').innerHTML = '';
+    startTimer();
+  }
+
+  function renderQuestion() {
+    const q = currentQuestions[currentIndex];
+    document.getElementById('quizTitle').innerHTML = `${currentCompany.name} – ${currentDomain}`;
+    const container = document.getElementById('quizQuestions');
+    const userAnswer = userAnswers[currentIndex];
+    let html = `<div class="question-text">${currentIndex+1}. ${q.text}</div><div class="options">`;
+    q.options.forEach((opt, idx) => {
+      html += `<div class="option ${userAnswer === idx ? 'selected' : ''}" data-opt="${idx}">${String.fromCharCode(65+idx)}. ${opt}</div>`;
+    });
+    html += `</div><div id="fb" class="feedback"></div>`;
+    container.innerHTML = html;
+    document.querySelectorAll('.option').forEach(opt => {
+      opt.onclick = () => {
+        if (questionAnswered) return;
+        document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        selectedOption = parseInt(opt.dataset.opt);
+      };
+    });
+    if (userAnswer !== null) {
+      const wasCorrect = (userAnswer === q.correct);
+      const fb = document.getElementById('fb');
+      fb.className = `feedback ${wasCorrect ? 'correct' : 'incorrect'}`;
+      fb.innerHTML = wasCorrect ? `✅ Correct! ${q.exp}` : `❌ Incorrect. Correct: ${q.options[q.correct]}. ${q.exp}`;
+      questionAnswered = true;
+    } else {
+      questionAnswered = false;
+    }
+  }
+
+  function submitAnswer() {
+    if (!quizActive) return;
+    const q = currentQuestions[currentIndex];
+    if (userAnswers[currentIndex] === null) {
+      if (selectedOption === null) {
+        document.getElementById('fb').innerHTML = '<span style="color:#ffaa44;">⚠️ Select an answer</span>';
+        return;
+      }
+      userAnswers[currentIndex] = selectedOption;
+      const isCorrect = (selectedOption === q.correct);
+      const fb = document.getElementById('fb');
+      fb.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+      fb.innerHTML = isCorrect ? `✅ Correct! ${q.exp}` : `❌ Incorrect. Correct: ${q.options[q.correct]}. ${q.exp}`;
+      questionAnswered = true;
+      selectedOption = null;
+      return;
+    }
+    if (currentIndex + 1 < currentQuestions.length) {
+      currentIndex++;
+      selectedOption = null;
+      questionAnswered = false;
+      timeLeft = 30;
+      document.getElementById('timerDisplay').innerText = '00:30';
+      renderQuestion();
+    } else {
+      const score = userAnswers.reduce((acc, ans, idx) => acc + (ans === currentQuestions[idx].correct ? 1 : 0), 0);
+      if (score === 10) {
+        document.getElementById('quizResult').innerHTML = '<span style="color:#00ff88;">🏆 Perfect! Generating certificate...</span>';
+        clearInterval(timerInterval);
+        quizActive = false;
+        generateCertificate();
+      } else {
+        document.getElementById('quizResult').innerHTML = `<span style="color:#ff8888;">Score: ${score}/10. Need 10/10.</span>`;
+        clearInterval(timerInterval);
+        quizActive = false;
+      }
+    }
+  }
+
+  function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      if (!quizActive) return;
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('quizResult').innerHTML = '<span style="color:#ff8888;">⏰ Time ran out!</span>';
+        quizActive = false;
+      } else {
+        timeLeft--;
+        const secs = timeLeft % 60;
+        document.getElementById('timerDisplay').innerText = `00:${secs.toString().padStart(2,'0')}`;
+      }
+    }, 1000);
+  }
+
+  function generateCertificate() {
+    const date = new Date().toISOString().split('T')[0];
+    const code = 'ARM-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+    const certHtml = `
+      <h1>CERTIFICATE OF COMPLETION</h1>
+      <p>This certifies that</p>
+      <h2>${userName}</h2>
+      <p>has completed</p>
+      <h3>${currentCompany.name} – ${currentDomain}</h3>
+      <p>job simulation with a perfect score.</p>
+      <p>Date: ${date}</p>
+      <div class="signature"><p>Nnadi Daniel</p><p>Founder & CEO, ArmorAI</p></div>
+      <p style="font-size:11px;">Verification: ${code}</p>
+    `;
+    document.getElementById('certContent').innerHTML = certHtml;
+    document.getElementById('quizModal').style.display = 'none';
+    document.getElementById('certModal').style.display = 'flex';
+  }
+
+  document.getElementById('submitAnswer').onclick = submitAnswer;
+  document.getElementById('closeQuiz').onclick = () => {
+    clearInterval(timerInterval);
+    quizActive = false;
+    document.getElementById('quizModal').style.display = 'none';
+  };
+  document.getElementById('closeCert').onclick = () => {
+    document.getElementById('certModal').style.display = 'none';
+  };
+
+  loadCompanies();
+</script>
+</body>
+</html>
