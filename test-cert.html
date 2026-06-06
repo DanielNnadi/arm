@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test - Certifications</title>
+<style>
+  body { background: #0a0f1e; color: white; font-family: Arial; padding: 120px 60px; }
+  .company-card { background: #0d1e2e; padding: 20px; margin-bottom: 20px; border-radius: 12px; }
+  .domain-list { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+  .domain-btn { background: #00d4ff; color: black; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; }
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; }
+  .modal-card { background: #0d1e2e; padding: 30px; max-width: 600px; width: 90%; border-radius: 20px; }
+  .option { background: #1e2a3a; padding: 10px; margin: 8px 0; border-radius: 30px; cursor: pointer; }
+  .option.selected { background: #00d4ff; color: black; }
+  .btn-glow { background: #00d4ff; border: none; padding: 12px 24px; border-radius: 40px; cursor: pointer; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<h1>Job Simulations</h1>
+<p>Click any button below to start a quiz.</p>
+<div id="companyGrid"></div>
+
+<div id="quizModal" class="modal">
+  <div class="modal-card">
+    <h2 id="quizTitle">Quiz</h2>
+    <div id="quizQuestions"></div>
+    <button class="btn-glow" id="submitBtn">Submit Answer</button>
+    <button class="btn-glow" id="closeModal" style="background:#334155;">Close</button>
+    <div id="quizResult"></div>
+  </div>
+</div>
+
+<script>
+  // Simple company data
+  const companies = [
+    { name: "Google", domains: ["Cybersecurity", "Software Development"] },
+    { name: "Microsoft", domains: ["Cloud Engineering", "Data Analytics"] }
+  ];
+
+  // Simple questions
+  const questions = {
+    "Cybersecurity": [
+      { text: "What is a firewall?", options: ["Filter network traffic", "Encrypt data", "Store passwords", "Scan viruses"], correct: 0 },
+      { text: "What does VPN stand for?", options: ["Virtual Private Network", "Very Private Network", "Virtual Public Network", "Verified Personal Network"], correct: 0 },
+      { text: "What is phishing?", options: ["Fake emails to steal data", "A type of virus", "A firewall", "An encryption method"], correct: 0 }
+    ],
+    "Software Development": [
+      { text: "What does API stand for?", options: ["Application Programming Interface", "Advanced Programming Interface", "Application Protocol Interface", "Automated Program Interface"], correct: 0 },
+      { text: "Which language is for Android?", options: ["Kotlin", "Swift", "C#", "PHP"], correct: 0 },
+      { text: "What is Git used for?", options: ["Version control", "Database", "Web server", "Encryption"], correct: 0 }
+    ],
+    "Cloud Engineering": [
+      { text: "What does IaaS stand for?", options: ["Infrastructure as a Service", "Integration as a Service", "Internet as a Service", "Information as a Service"], correct: 0 },
+      { text: "Which is an AWS storage service?", options: ["S3", "EC2", "Lambda", "RDS"], correct: 0 },
+      { text: "What is serverless?", options: ["No server management", "No servers at all", "Physical servers only", "Mainframe computing"], correct: 0 }
+    ],
+    "Data Analytics": [
+      { text: "What does SQL stand for?", options: ["Structured Query Language", "Simple Query Language", "Standard Query Language", "Sequential Query Language"], correct: 0 },
+      { text: "Which Python library is for data visualization?", options: ["Matplotlib", "NumPy", "Pandas", "Scikit-learn"], correct: 0 },
+      { text: "What is data cleaning?", options: ["Removing errors", "Adding data", "Encrypting data", "Backing up data"], correct: 0 }
+    ]
+  };
+
+  let currentCompany = null;
+  let currentDomain = null;
+  let currentQuestions = [];
+  let currentIndex = 0;
+  let userAnswers = [];
+  let selectedOption = null;
+
+  // Load companies
+  function loadCompanies() {
+    const grid = document.getElementById('companyGrid');
+    grid.innerHTML = '';
+    companies.forEach(company => {
+      const card = document.createElement('div');
+      card.className = 'company-card';
+      card.innerHTML = `<h3>${company.name}</h3><div class="domain-list"></div>`;
+      const domainList = card.querySelector('.domain-list');
+      company.domains.forEach(domain => {
+        const btn = document.createElement('button');
+        btn.className = 'domain-btn';
+        btn.textContent = domain;
+        btn.onclick = () => startQuiz(company.name, domain);
+        domainList.appendChild(btn);
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  function startQuiz(companyName, domain) {
+    currentCompany = companyName;
+    currentDomain = domain;
+    currentQuestions = questions[domain];
+    if (!currentQuestions) {
+      alert('No questions for this domain');
+      return;
+    }
+    currentIndex = 0;
+    userAnswers = new Array(currentQuestions.length).fill(null);
+    selectedOption = null;
+    renderQuestion();
+    document.getElementById('quizModal').style.display = 'flex';
+  }
+
+  function renderQuestion() {
+    const q = currentQuestions[currentIndex];
+    document.getElementById('quizTitle').innerHTML = `${currentCompany} - ${currentDomain} (Question ${currentIndex+1}/${currentQuestions.length})`;
+    const container = document.getElementById('quizQuestions');
+    let html = `<div class="question-text" style="margin-bottom:20px; font-size:18px;">${q.text}</div><div class="options">`;
+    q.options.forEach((opt, idx) => {
+      html += `<div class="option ${userAnswers[currentIndex] === idx ? 'selected' : ''}" data-opt="${idx}">${String.fromCharCode(65+idx)}. ${opt}</div>`;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
+    
+    document.querySelectorAll('.option').forEach(opt => {
+      opt.onclick = () => {
+        document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        selectedOption = parseInt(opt.dataset.opt);
+      };
+    });
+  }
+
+  document.getElementById('submitBtn').onclick = () => {
+    if (selectedOption === null) {
+      document.getElementById('quizResult').innerHTML = '<span style="color:#ffaa44;">Please select an answer</span>';
+      return;
+    }
+    userAnswers[currentIndex] = selectedOption;
+    if (currentIndex + 1 < currentQuestions.length) {
+      currentIndex++;
+      selectedOption = null;
+      renderQuestion();
+      document.getElementById('quizResult').innerHTML = '';
+    } else {
+      // Quiz completed
+      let score = 0;
+      for (let i = 0; i < currentQuestions.length; i++) {
+        if (userAnswers[i] === currentQuestions[i].correct) score++;
+      }
+      if (score === currentQuestions.length) {
+        document.getElementById('quizResult').innerHTML = '<span style="color:#00ff88;">🎉 Perfect score! Certificate earned!</span>';
+      } else {
+        document.getElementById('quizResult').innerHTML = `<span style="color:#ff8888;">You scored ${score}/${currentQuestions.length}. Need perfect score for certificate.</span>`;
+      }
+    }
+    selectedOption = null;
+  };
+
+  document.getElementById('closeModal').onclick = () => {
+    document.getElementById('quizModal').style.display = 'none';
+    document.getElementById('quizResult').innerHTML = '';
+  };
+
+  loadCompanies();
+</script>
+</body>
+</html>
